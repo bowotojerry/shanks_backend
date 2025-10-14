@@ -28,7 +28,7 @@ const filterSensitiveInfo = format((info) => {
 
 // Create a custom logger
 const logger = createLogger({
-  level: process.env.LOG_LEVEL || 'info', // Use env variable for flexibility
+  level: process.env.NODE_ENV || 'development',
   format: format.combine(
     filterSensitiveInfo(),
     format.timestamp(),
