@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 const express = require("express");
-const { logger, morganStream} = require("./modules/utils/logger");
+const { logger, morganStream } = require("./modules/utils/logger");
 const morgan = require("morgan");
 const { default: mongoose } = require("mongoose");
 
@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json()); // to parse request body data
 app.use(express.urlencoded({ extended: true })); // to parse form data
 // Use Morgan middleware with a predefined format, piping logs to Winston
-app.use(morgan('combined', { stream: morganStream }));
+app.use(morgan("combined", { stream: morganStream }));
 
 // health check for route
 app.get("/api/v1/health", (req, res) => {
