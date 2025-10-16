@@ -6,7 +6,7 @@ const MONGO_URL = process.env.MONGO_URL;
 mongoose
   .connect(MONGO_URL, {
   serverSelectionTimeoutMS: 5000,
-  family: 4, // Force IPv4
+  family: 4, //
 })
   .then(() => {
     logger.info("database connection successful");
