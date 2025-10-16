@@ -1,5 +1,5 @@
 {
-  "name": "shanks_web_app_backend",
+  "name": "shanks_backend",
   "version": "1.0.0",
   "description": "This website is a central digital hub that combines both informational and interactive components to engage visitors , clients , partners and prospects, it includes AI integration, real-time systems with websocket, app features and custom backend tools",
   "license": "ISC",
