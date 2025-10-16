@@ -5,10 +5,10 @@
   "license": "ISC",
   "author": "Bowoto jeremiah",
   "type": "commonjs",
-  "main": "app.js",
+  "main": "src/server.js",
   "scripts": {
-    "start:dev": "set NODE_ENV=development&&nodemon src/app.js",
-    "start:prod": "set NODE_ENV=production&&node src/app.js",
+    "start:dev": "set NODE_ENV=development&&nodemon  src/server.js",
+    "start:prod": "set NODE_ENV=production&&node  src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

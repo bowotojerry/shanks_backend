@@ -34,7 +34,7 @@ const logger = createLogger({
     format.errors({ stack: true }),
     format.json()
   ),
-  defaultMeta: { service: "shanks_website" },
+  defaultMeta: { service: "shanks_web_app_backend" },
   transports: [
     new transports.File({ filename: "logs/error.log", level: "error" }),
     new transports.File({ filename: "logs/combined.log" }),
