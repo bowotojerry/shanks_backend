@@ -1,4 +1,3 @@
-// middleware/restrictTo.js
 const { catchAsync } = require("./../utils");
 const AppError = require("./../utils/appError");
 
