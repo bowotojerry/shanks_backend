@@ -50,6 +50,7 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+//virtual property to return ID as string,useful on the frontend
 userSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
