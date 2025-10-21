@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       validate: [validator.isEmail, ' please provide a valid email'],
-      
     },
     password: {
       type: String,
@@ -25,12 +24,18 @@ const userSchema = new mongoose.Schema(
       select: false, //exclude password from query outputs and allows projection
     },
     confirmPassword: {
+      required: [true, 'please provide a password confirmation'],
       validate: {
         validator: function (el) {
           return el === this.password;
         },
         message: 'Passwords are not the same!',
       },
+    },
+    roles: {
+      type: String, //[String],
+      enum: ['user', 'partner', 'admin'],
+      default: 'user', //['user'],
     },
     companyName: {
       type: String,
