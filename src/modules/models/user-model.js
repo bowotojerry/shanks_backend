@@ -7,18 +7,21 @@ const userSchema = new mongoose.Schema(
     fullName: {
       type: String,
       required: [true, 'full name is required'],
+      trim: true,
     },
     email: {
       type: String,
       required: [true, 'email is required'],
-      unique: [true, 'email already exists'], //This creates an index to ensure email uniqueness
+      unique: [true, 'Email already in use, please use another email'], //This creates an index to ensure email uniqueness
       lowercase: true,
+      trim: true,
       validate: [validator.isEmail, ' please provide a valid email'],
+      
     },
     password: {
       type: String,
       required: [true, 'password is required'],
-      minLength: 8,
+      minLength: [8, 'password must be at least 8 characters long'],
       select: false, //exclude password from query outputs and allows projection
     },
     confirmPassword: {
@@ -31,6 +34,7 @@ const userSchema = new mongoose.Schema(
     },
     companyName: {
       type: String,
+      trim: true,
     },
   },
   { timestamps: true }

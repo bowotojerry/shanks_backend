@@ -1,109 +1,115 @@
-# Shanks Web App Backend
+# Shanks Web App — Backend
 
-A modular Node.js/Express backend providing core services for the Shanks web application: REST endpoints, database connectivity, logging, and real-time support scaffolding.
+A production-ready Node.js + Express backend for the Shanks web application. Provides user management, JWT-based authentication scaffolding, MongoDB persistence via Mongoose, structured logging, and real-time-ready architecture.
 
-- Language: JavaScript (CommonJS)
-- Entry point: [src/server.js](src/server.js)
-- Configured via: [.env](.env) / [.env.example](.env.example)
-- Package manifest: [package.json](package.json)
+## Table of contents
+- About
+- Features
+- Tech stack
+- Quick start
+- Environment variables
+- Available scripts
+- Project structure
+- Development notes
+- Testing
+- Docker (optional)
+- Contributing
+- License & maintainers
+
+## About
+This repo contains the backend API and services for the Shanks web application. It focuses on a secure user model, extensible routing, and observability using Winston + Morgan. The project uses CommonJS modules and expects a MongoDB database.
 
 ## Features
+- Express server scaffold
+- Mongoose models and schema validation (includes password hashing)
+- JWT-ready authentication flow
+- Structured logging (Winston) with Morgan integration
+- Environment-based configuration (development / production)
+- Ready for WebSocket/real-time extensions
 
-- Express application scaffold ([`app`](src/app.js))
-- MongoDB connection using Mongoose ([`mongoose`](config/database.js))
-- Structured logging with Winston and Morgan integration ([`logger`, `morganStream`](src/modules/utils/logger.js))
-- Server Health-check endpoint at `/api/v1/health` implemented in [src/server.js](src/server.js)
-- Development and production start scripts in [package.json](package.json)
-- Logs persisted to `logs/` and ignored by Git via [.gitignore](.gitignore)
+## Tech stack
+- Node.js
+- Express
+- MongoDB (Mongoose)
+- Winston & Morgan (logging)
+- bcrypt (password hashing)
+- dotenv (configuration)
 
-## Quick Start
+## Quick start
+1. Install
+   ```bash
+   npm install
+   ```
+2. Create `.env` (see example below) and set values.
+3. Start in development:
+   ```bash
+   npm run start:dev
+   ```
+4. Start in production:
+   ```bash
+   npm run start:prod
+   ```
 
-Prerequisites:
-- Node.js 18+ (or compatible)
-- A MongoDB connection URI
-
-1. Install dependencies
-```bash
-npm install
+## Example .env
+(Place at project root; do not commit secrets)
+```env
+APP_PORT=3000
+NODE_ENV=development
+MONGO_URL=mongodb://localhost:27017/shanks_db
+JWT_SECRET=your_jwt_secret_here
+JWT_EXPIRES_IN=7d
+LOG_LEVEL=info
 ```
 
-2. Create an environment file
-- Copy [.env.example](.env.example) to `.env` and set values (or edit `.env` directly). Key variables:
-  - `APP_PORT` — application port
-- **Never commit `.env` to Git!** Copy [.env.example](.env.example) to `.env`...
- - `MONGO_URL` — MongoDB connection string('use your own')
+## Available scripts
+- `npm run start:dev` — run with nodemon (development)
+- `npm run start:prod` — run production node process
+- `npm test` — placeholder (configure jest tests)
 
-3. Run in development
-```bash
-npm run start:dev
+## Project structure (high level)
+- src/
+  - server.js — app entry and server boot
+  - app.js — express setup (middlewares, routes)
+  - modules/
+    - models/ — Mongoose schemas (e.g., user-model.js)
+    - controllers/
+    - routes/
+    - utils/ — logger, helpers
+- config/ — DB connection (e.g., config/database.js)
+- logs/ — runtime logs (gitignored)
+
+## Development notes
+- Passwords are hashed in a pre-save hook in the user model (bcrypt).
+- `email: { unique: true }` creates a DB index — handle duplicate key errors at runtime.
+- The user schema sets `password.select = false` — ensure you explicitly select password when verifying credentials.
+- Load `.env` in non-production runs (see server bootstrap).
+- Consider adding rate limiting, account lockout, and strong password rules before production.
+
+## Testing
+- Add unit and integration tests with Jest or your preferred framework.
+- Current `test` script is a placeholder — update to run test suites.
+
+## Docker (optional)
+Create a simple Dockerfile and docker-compose to run the service and a MongoDB service locally. Example compose:
+```yaml
+version: "3.8"
+services:
+  app:
+    build: .
+    ports: ["3000:3000"]
+    env_file: .env
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:6
+    ports: ["27017:27017"]
 ```
-
-4. Run in production
-```bash
-npm run start:prod
-```
-
-The server listens on `APP_PORT` (default 3000) and exposes a health check at:
-- GET /api/v1/health (see [src/server.js](src/server.js))
-
-## Configuration
-
-- Application entry: [src/server.js](src/server.js)
-- Express app instance: [`app`](src/app.js)
-- Database connection and exported `mongoose` instance: [`mongoose`](config/database.js)
-- Logging: [`logger`](src/modules/utils/logger.js) and [`morganStream`](src/modules/utils/logger.js)
-- Environment variables are loaded from `.env` (when not in production) as handled in [src/server.js](src/server.js)
-
-## Logging
-
-Winston is configured in [src/modules/utils/logger.js](src/modules/utils/logger.js). HTTP access logs are piped from Morgan into Winston via the exported `morganStream`. Log files are written to the `logs/` directory.
-
-## Database
-
-The MongoDB connection is established in [config/database.js](config/database.js). The file exports the connected `mongoose` instance which is used across the app.
-
-## Project Structure
-
-Top-level files:
-- [package.json](package.json)
-- [.env.example](.env.example)
-- [.gitignore](.gitignore)
-
-Key folders:
-- src/ — application source
-  - [src/app.js](src/app.js)
-  - [src/server.js](src/server.js)
-  - src/modules/ — controllers, middlewares, models, routes, services, socket, utils
-    - [src/modules/utils/logger.js](src/modules/utils/logger.js)
-- config/ — infrastructural configs (e.g., [config/database.js](config/database.js))
-- logs/ — runtime logs (ignored by Git)
-
-## Development Notes
-
-- Environment variables are conditionally loaded in [src/server.js](src/server.js) for non-production runs.
-- The logger filters sensitive fields before writing logs; review [src/modules/utils/logger.js](src/modules/utils/logger.js) if you extend logging.
-- The project uses CommonJS modules (see `type` in [package.json](package.json)).
-
-## Tests
-
-No tests are configured. The test script in [package.json](package.json) currently exits with an error placeholder.
 
 ## Contributing
+- Open issues or PRs for features or fixes.
+- Follow existing code patterns: keep controllers thin, use services for business logic.
+- Add tests for new behavior and update README with new envvars or script changes.
 
-- Follow existing code patterns in `src/modules/`
-- Add unit tests and update `package.json` test script
-- Keep secrets out of the repository; use `.env` and `.env.example`
-
-## License
-
-ISC — see [package.json](package.json)
-
-## References
-
-- Application: [`app`](src/app.js) — [src/app.js](src/app.js)  
-- Server / health-check: [src/server.js](src/server.js)  
-- Database connection / `mongoose`: [config/database.js](config/database.js)  
-- Logger / Morgan stream: [`logger`, `morganStream`](src/modules/utils/logger.js) — [src/modules/utils/logger.js](src/modules/utils/logger.js)  
-- Package metadata & scripts: [package.json](package.json)  
-- Environment example: [.env.example](.env.example)  
-- Git ignore: [.gitignore](.gitignore)
+## License & maintainers
+License: ISC (see package.json)  
+Maintainer: Bowoto Jeremiah
