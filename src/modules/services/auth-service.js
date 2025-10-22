@@ -31,7 +31,7 @@ exports.signup = catchAsync(async (userData) => {
     // Create new user in the database
     const newUser = await User.create(newUserData);
     
-    // Sign JWT
+    // call function that Signs JWT
     const token = signToken(newUser.id); 
     
     // Return token and user object (password is excluded by select: false)
